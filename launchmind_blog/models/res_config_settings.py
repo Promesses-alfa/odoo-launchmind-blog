@@ -29,7 +29,7 @@ _logger = logging.getLogger(__name__)
 
 # We declare a single major version constant so the settings page and the
 # header sent to launchmind.io stay in lockstep with __manifest__.py.
-LAUNCHMIND_MODULE_VERSION = '18.0.1.0.0'
+LAUNCHMIND_MODULE_VERSION = '18.0.1.0.1'
 
 
 class ResConfigSettings(models.TransientModel):

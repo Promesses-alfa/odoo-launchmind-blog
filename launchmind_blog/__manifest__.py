@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Launchmind Blog',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.0.1',
     'category': 'Website/Blog',
     'summary': 'AI-generated, GEO-optimized blog articles published automatically to your Odoo Website',
     'description': """
