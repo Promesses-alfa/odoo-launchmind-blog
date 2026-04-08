@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+            Default Launchmind API base URL. Customers normally never have to
+            change this; it lives in System Parameters and is overridable per
+            install for development / staging environments.
+        -->
+        <record id="launchmind_api_base_default" model="ir.config_parameter">
+            <field name="key">launchmind_blog.api_base</field>
+            <field name="value">https://launchmind.io</field>
+        </record>
+    </data>
+</odoo>
