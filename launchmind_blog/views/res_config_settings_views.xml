@@ -19,7 +19,7 @@
                         <div class="content-group">
                             <div class="row mt8">
                                 <label for="launchmind_api_key" class="col-lg-3 o_light_label"/>
-                                <field name="launchmind_api_key" placeholder="lm_live_..."/>
+                                <field name="launchmind_api_key" password="True" placeholder="lm_live_..."/>
                             </div>
                             <div class="row">
                                 <label for="launchmind_api_base" class="col-lg-3 o_light_label"/>

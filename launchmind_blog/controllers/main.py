@@ -186,18 +186,21 @@ class LaunchmindBlogWebhookController(http.Controller):
             'website_meta_keywords': meta_keywords,
         }
 
-        # Cover image: if Launchmind sent a URL, fetch it and store as
-        # binary so Odoo's Website can serve it from the storefront with
-        # proper caching. Failure to fetch the image is non-fatal — the
-        # post is still created, just without a cover.
+        # Cover image: Launchmind hosts the image on its own CDN so we just
+        # reference the URL directly via cover_properties. Odoo's website
+        # blog template renders this as a CSS background-image. We don't
+        # need to fetch + store the image binary — public URLs are reliable
+        # and avoid bloating the customer's database.
+        #
+        # cover_properties is a JSON string with 4 keys matching Odoo 18's
+        # default schema (see website_blog/models/website_blog_post.py).
         if cover_image_url:
-            image_data = _fetch_image_bytes(cover_image_url)
-            if image_data:
-                post_vals['cover_properties'] = json.dumps({
-                    'background-image': 'url(%s)' % cover_image_url,
-                    'opacity': '1',
-                    'resize_class': 'o_record_has_cover o_half_screen_height o_record_has_cover_top',
-                })
+            post_vals['cover_properties'] = json.dumps({
+                'background-image': 'url(%s)' % cover_image_url,
+                'background-color': 'oe_none',
+                'opacity': '1',
+                'resize_class': 'o_record_has_cover o_half_screen_height o_record_has_cover_top',
+            })
 
         try:
             if existing:
@@ -273,28 +276,3 @@ def _safe_eq(a, b):
     return result == 0
 
 
-def _fetch_image_bytes(url):
-    """Best-effort image fetch. Returns ``bytes`` or ``None`` on failure."""
-    try:
-        import requests as _requests
-    except ImportError:
-        return None
-
-    try:
-        resp = _requests.get(url, timeout=10, stream=True)
-        if resp.status_code != 200:
-            return None
-        # Cap at 5 MB so a hostile / oversized image can't blow up Odoo.
-        max_bytes = 5 * 1024 * 1024
-        chunks = []
-        total = 0
-        for chunk in resp.iter_content(chunk_size=8192):
-            if not chunk:
-                break
-            chunks.append(chunk)
-            total += len(chunk)
-            if total > max_bytes:
-                return None
-        return b''.join(chunks)
-    except Exception:  # pragma: no cover
-        return None
