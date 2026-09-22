@@ -148,7 +148,6 @@ class LaunchmindBlogWebhookController(http.Controller):
             ('website_meta_keywords', 'ilike', marker),
         ], limit=1)
 
-        slug = article.get('slug') or _slugify(title)
         excerpt = article.get('meta_description') or ''
         author_name = article.get('author') or 'Launchmind'
         cover_image_url = article.get('cover_image_url') or ''
