@@ -32,22 +32,18 @@ Requirements
     'website': 'https://launchmind.io',
     'support': 'support@launchmind.io',
     'license': 'LGPL-3',
-
     'depends': [
         'website_blog',
         'website',
     ],
-
     'data': [
         'security/ir.model.access.csv',
         'data/ir_config_parameter_data.xml',
         'views/res_config_settings_views.xml',
     ],
-
     'images': [
         'static/description/images/main_screenshot.png',
     ],
-
     'installable': True,
     'application': False,
     'auto_install': False,

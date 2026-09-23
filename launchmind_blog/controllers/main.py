@@ -72,7 +72,9 @@ class LaunchmindBlogWebhookController(http.Controller):
         if not configured_key:
             _logger.warning('[Launchmind] Webhook called but no API key is configured')
             return _json_response(
-                {'error': 'Launchmind module is not connected on this Odoo. Configure it under Settings > Website > Launchmind Blog.'},
+                {
+                    'error': 'Launchmind module is not connected on this Odoo. Configure it under Settings > Website > Launchmind Blog.'
+                },
                 status=503,
             )
 
@@ -129,10 +131,12 @@ class LaunchmindBlogWebhookController(http.Controller):
 
         blog = Blog.search([('name', '=', 'Launchmind Blog')], limit=1)
         if not blog:
-            blog = Blog.create({
-                'name': 'Launchmind Blog',
-                'subtitle': 'AI-powered SEO articles, automatically published',
-            })
+            blog = Blog.create(
+                {
+                    'name': 'Launchmind Blog',
+                    'subtitle': 'AI-powered SEO articles, automatically published',
+                }
+            )
 
         # ------------------------------------------------------------------
         # 4. Idempotent upsert by launchmind_article_id
@@ -143,10 +147,13 @@ class LaunchmindBlogWebhookController(http.Controller):
         # column / migration. This keeps the module installable on a fresh
         # Odoo without any DB schema changes.
         marker = 'lm:%s' % launchmind_id
-        existing = BlogPost.search([
-            ('blog_id', '=', blog.id),
-            ('website_meta_keywords', 'ilike', marker),
-        ], limit=1)
+        existing = BlogPost.search(
+            [
+                ('blog_id', '=', blog.id),
+                ('website_meta_keywords', 'ilike', marker),
+            ],
+            limit=1,
+        )
 
         excerpt = article.get('meta_description') or ''
         author_name = article.get('author') or 'Launchmind'
@@ -164,14 +171,20 @@ class LaunchmindBlogWebhookController(http.Controller):
         meta_keywords = ', '.join(meta_keywords_parts)[:255]
 
         # Resolve / create author. blog.post.author_id is res.partner.
-        author_partner = request.env['res.partner'].sudo().search(
-            [('name', '=', author_name)], limit=1
+        author_partner = (
+            request.env['res.partner'].sudo().search([('name', '=', author_name)], limit=1)
         )
         if not author_partner:
-            author_partner = request.env['res.partner'].sudo().create({
-                'name': author_name,
-                'company_type': 'person',
-            })
+            author_partner = (
+                request.env['res.partner']
+                .sudo()
+                .create(
+                    {
+                        'name': author_name,
+                        'company_type': 'person',
+                    }
+                )
+            )
 
         post_vals = {
             'name': title,
@@ -194,12 +207,14 @@ class LaunchmindBlogWebhookController(http.Controller):
         # cover_properties is a JSON string with 4 keys matching Odoo 18's
         # default schema (see website_blog/models/website_blog_post.py).
         if cover_image_url:
-            post_vals['cover_properties'] = json.dumps({
-                'background-image': 'url(%s)' % cover_image_url,
-                'background-color': 'oe_none',
-                'opacity': '1',
-                'resize_class': 'o_record_has_cover o_half_screen_height o_record_has_cover_top',
-            })
+            post_vals['cover_properties'] = json.dumps(
+                {
+                    'background-image': 'url(%s)' % cover_image_url,
+                    'background-color': 'oe_none',
+                    'opacity': '1',
+                    'resize_class': 'o_record_has_cover o_half_screen_height o_record_has_cover_top',
+                }
+            )
 
         try:
             if existing:
@@ -210,7 +225,9 @@ class LaunchmindBlogWebhookController(http.Controller):
                 post = BlogPost.create(post_vals)
                 action = 'created'
         except Exception as exc:  # pragma: no cover - defensive
-            _logger.exception('[Launchmind] Failed to upsert blog post for article %s', launchmind_id)
+            _logger.exception(
+                '[Launchmind] Failed to upsert blog post for article %s', launchmind_id
+            )
             return _json_response(
                 {'error': 'Failed to save post: %s' % str(exc)},
                 status=500,
@@ -226,12 +243,15 @@ class LaunchmindBlogWebhookController(http.Controller):
 
         ICP.set_param('launchmind_blog.last_received_at', fields.Datetime.now().isoformat())
 
-        return _json_response({
-            'success': True,
-            'action': action,
-            'post_id': post.id,
-            'post_url': post_url,
-        }, status=200)
+        return _json_response(
+            {
+                'success': True,
+                'action': action,
+                'post_id': post.id,
+                'post_url': post_url,
+            },
+            status=200,
+        )
 
     @http.route(
         '/launchmind-blog/health',
@@ -247,16 +267,20 @@ class LaunchmindBlogWebhookController(http.Controller):
         ICP = request.env['ir.config_parameter'].sudo()
         connected = (ICP.get_param('launchmind_blog.connected') or '').lower() == 'true'
         last_received = ICP.get_param('launchmind_blog.last_received_at') or None
-        return _json_response({
-            'ok': True,
-            'connected': connected,
-            'last_received_at': last_received,
-        }, status=200)
+        return _json_response(
+            {
+                'ok': True,
+                'connected': connected,
+                'last_received_at': last_received,
+            },
+            status=200,
+        )
 
 
 # ----------------------------------------------------------------------------
 # Helpers
 # ----------------------------------------------------------------------------
+
 
 def _safe_eq(a, b):
     """Length-safe string comparison.
@@ -273,5 +297,3 @@ def _safe_eq(a, b):
     for x, y in zip(a, b):
         result |= ord(x) ^ ord(y)
     return result == 0
-
-

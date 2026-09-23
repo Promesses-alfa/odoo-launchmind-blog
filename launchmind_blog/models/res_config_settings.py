@@ -40,15 +40,15 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='launchmind_blog.api_base',
         default='https://launchmind.io',
         help='Leave at the default unless you are pointing this Odoo at a '
-             'staging environment of Launchmind.',
+        'staging environment of Launchmind.',
     )
 
     launchmind_api_key = fields.Char(
         string='Launchmind API Key',
         config_parameter='launchmind_blog.api_key',
         help='Your personal Launchmind API key. Find it in your Launchmind '
-             'dashboard under Settings > API. The webhook receiver also uses '
-             'this key to authenticate incoming pushes from launchmind.io.',
+        'dashboard under Settings > API. The webhook receiver also uses '
+        'this key to authenticate incoming pushes from launchmind.io.',
     )
 
     launchmind_connected = fields.Boolean(
@@ -88,28 +88,46 @@ class ResConfigSettings(models.TransientModel):
         # most recent input is what we use, even if they haven't clicked
         # "Save" yet.
         ICP = self.env['ir.config_parameter'].sudo()
-        api_base = (self.launchmind_api_base or ICP.get_param('launchmind_blog.api_base') or 'https://launchmind.io').rstrip('/')
-        api_key = (self.launchmind_api_key or ICP.get_param('launchmind_blog.api_key') or '').strip()
+        api_base = (
+            self.launchmind_api_base
+            or ICP.get_param('launchmind_blog.api_base')
+            or 'https://launchmind.io'
+        ).rstrip('/')
+        api_key = (
+            self.launchmind_api_key or ICP.get_param('launchmind_blog.api_key') or ''
+        ).strip()
 
         if not api_key:
             raise UserError(_('Please enter your Launchmind API key first.'))
 
         if requests is None:
-            raise UserError(_('The Python `requests` library is not available; cannot contact Launchmind.'))
+            raise UserError(
+                _('The Python `requests` library is not available; cannot contact Launchmind.')
+            )
 
         # The Odoo Website base URL the merchant has configured. This is
         # what launchmind.io will push articles to.
         base_url = ICP.get_param('web.base.url')
         if not base_url:
-            raise UserError(_('Could not determine your Odoo base URL. Please set web.base.url in System Parameters first.'))
+            raise UserError(
+                _(
+                    'Could not determine your Odoo base URL. Please set web.base.url in System Parameters first.'
+                )
+            )
 
         base_url = base_url.rstrip('/')
 
-        if not base_url.startswith('https://') and 'localhost' not in base_url and '127.0.0.1' not in base_url:
-            raise UserError(_(
-                'Your Odoo base URL must use HTTPS for the Launchmind webhook to work. '
-                'Update web.base.url under Settings > Technical > System Parameters.'
-            ))
+        if (
+            not base_url.startswith('https://')
+            and 'localhost' not in base_url
+            and '127.0.0.1' not in base_url
+        ):
+            raise UserError(
+                _(
+                    'Your Odoo base URL must use HTTPS for the Launchmind webhook to work. '
+                    'Update web.base.url under Settings > Technical > System Parameters.'
+                )
+            )
 
         register_url = api_base + '/api/integrations/odoo/register'
 
@@ -138,15 +156,23 @@ class ResConfigSettings(models.TransientModel):
 
         if response.status_code == 401:
             ICP.set_param('launchmind_blog.last_status', 'invalid_key')
-            raise UserError(_('Launchmind rejected the API key. Please double-check it in your Launchmind dashboard.'))
+            raise UserError(
+                _(
+                    'Launchmind rejected the API key. Please double-check it in your Launchmind dashboard.'
+                )
+            )
 
         if response.status_code == 403:
             ICP.set_param('launchmind_blog.last_status', 'subscription_inactive')
-            raise UserError(_('Your Launchmind subscription is not active. Please reactivate it and try again.'))
+            raise UserError(
+                _('Your Launchmind subscription is not active. Please reactivate it and try again.')
+            )
 
         if response.status_code == 409:
             ICP.set_param('launchmind_blog.last_status', 'url_in_use')
-            raise UserError(_('This Odoo URL is already connected to a different Launchmind account.'))
+            raise UserError(
+                _('This Odoo URL is already connected to a different Launchmind account.')
+            )
 
         if response.status_code >= 400:
             ICP.set_param('launchmind_blog.last_status', 'http_%s' % response.status_code)
