@@ -1,0 +1,187 @@
+{
+  "format": 1,
+  "source_repository": "Promesses-alfa/Launchmind.io",
+  "source_sha": "8a95da729b71c9942524d61706d8eddfd87e13ce",
+  "files": [
+    {
+      "path": "docs/design/odoo-discovery-measurement.md",
+      "sha256": "c0cfdeb8f68b47d81874ba1ed6eb586b62edcf1a33b009b2db158fe6bbbe9ee0"
+    },
+    {
+      "path": "docs/design/odoo-release-handoff.md",
+      "sha256": "6356f79be2141767359e9438cb29020870aed141a7a4e67daef78d3739e39b79"
+    },
+    {
+      "path": "docs/design/odoo-signed-delivery.md",
+      "sha256": "e33ba34fa72811fdfe27af2eb59501d7e7da2fcdfe4a5c9386b88697e6f857c3"
+    },
+    {
+      "path": "docs/design/pebble-odoo-parity-gaps.md",
+      "sha256": "c777e92108b174a6a6009d2dedd0c1cbb3437eff10986c12ebf24c36691f6c02"
+    },
+    {
+      "path": "docs/evidence/pebble-decisions.tsv",
+      "sha256": "61d8842ac2e79029eb1b75bdb6f806cb94f854ca362178917219badac2d88d94"
+    },
+    {
+      "path": "docs/plans/pebble-odoo-pilot.md",
+      "sha256": "65420f1e17cd5c3ca38ba68aa3806513e5e1d88c336dcab94a684c9ae6de99cb"
+    },
+    {
+      "path": "launchmind_blog/CHANGELOG.md",
+      "sha256": "9e2c8bf6b2f531fe4ddd6868283a2fdfd3ef7f40edaf9d87e3e293d509705c81"
+    },
+    {
+      "path": "launchmind_blog/LICENSE",
+      "sha256": "0208ef64d33d229cc5149dcd2cf5e42e1718538020cccd54c6763b9c0a3dbc4f"
+    },
+    {
+      "path": "launchmind_blog/README.rst",
+      "sha256": "bcb6f5a1917c6c7f8167a19a60ef868d0dada0e94a75092462ccf3d409f5a5a0"
+    },
+    {
+      "path": "launchmind_blog/__init__.py",
+      "sha256": "604993169b8adad0f13bb785b5706e3cda4a49921ed87b2aa82f7161c0757c18"
+    },
+    {
+      "path": "launchmind_blog/__manifest__.py",
+      "sha256": "59cafff393b9d921c89f39680a203ed3c260ef2ed29b7fd217726661d8eb788f"
+    },
+    {
+      "path": "launchmind_blog/controllers/__init__.py",
+      "sha256": "d358d79f01ebdfa16d52019e72dbfd475ddca6e3351549df37179b94f268a932"
+    },
+    {
+      "path": "launchmind_blog/controllers/article.py",
+      "sha256": "85a227a8710f52c397b3075c8d6ef4a69b0e8098122204033ce464d108fc5b59"
+    },
+    {
+      "path": "launchmind_blog/controllers/main.py",
+      "sha256": "094bb7149d0983065de1fd7967d5c9545a08fc7dd92f6c06d5cd9f1a99d41c81"
+    },
+    {
+      "path": "launchmind_blog/controllers/robots.py",
+      "sha256": "e4c44b10a3b11dfc1b17063675ea8bf9d753520e167d803dc20ebde54463df41"
+    },
+    {
+      "path": "launchmind_blog/data/ir_config_parameter_data.xml",
+      "sha256": "7af8d22291b630c0a006095cf71c1774a65af69b82e97e1f3d874188fac8e948"
+    },
+    {
+      "path": "launchmind_blog/data/ir_cron_data.xml",
+      "sha256": "2624d4cc71137401ec8467640fdb6214bb7cdef2fbda204fca5514aed177e07e"
+    },
+    {
+      "path": "launchmind_blog/migrations/18.0.1.5.0/post-migrate.py",
+      "sha256": "16027e4d342c01bb976d7ba8a1136053336e707093328a9463c4967ae66c9320"
+    },
+    {
+      "path": "launchmind_blog/models/__init__.py",
+      "sha256": "3d12ecc45c0dd905b0d83cc023d0bc677d22464fbc731dd5cc00190ff4b01bfb"
+    },
+    {
+      "path": "launchmind_blog/models/blog_post.py",
+      "sha256": "a1002db5e35fe6df79365bb9183c02f63c474b0fa13e504cb88fa5f7019100f3"
+    },
+    {
+      "path": "launchmind_blog/models/discovery.py",
+      "sha256": "d73d91ecacfeba5afdad07dae8305b63c43f92cbc048c3123f7e887300a6e9eb"
+    },
+    {
+      "path": "launchmind_blog/models/ir_attachment.py",
+      "sha256": "990b1133849500097dfc0b8be98d29fe02332dee34fd30dbb194fd33878b4001"
+    },
+    {
+      "path": "launchmind_blog/models/ir_http.py",
+      "sha256": "996bc34caaabb867a48b5a997eda02e0fa8f335a876723f3910d70a741ce8529"
+    },
+    {
+      "path": "launchmind_blog/models/launchmind_receipt.py",
+      "sha256": "b7849101b279ce3a485ce5e74449463f4c2550e15c93da28c73c6d9826635005"
+    },
+    {
+      "path": "launchmind_blog/models/res_config_settings.py",
+      "sha256": "f259ea80ea52a1219442da54e570fc2077bb28a67dcb0f5fd97d312dbbc035b1"
+    },
+    {
+      "path": "launchmind_blog/models/res_config_settings_discovery.py",
+      "sha256": "6121f4eef256d8db7da07265b61716348c6b7f436c483bbecccf7667e1c62131"
+    },
+    {
+      "path": "launchmind_blog/models/res_partner.py",
+      "sha256": "1313ada8cd471e7ce6108e0ac8ec5cb069967114bf0fbf80b20e68aefee1c185"
+    },
+    {
+      "path": "launchmind_blog/security/ir.model.access.csv",
+      "sha256": "717025bcbaa6979a72ec47845f6d0b4e6f62cefa01a86b6ccdd73cc0f0bf47b3"
+    },
+    {
+      "path": "launchmind_blog/static/description/icon.png",
+      "sha256": "bb674983550421c1062108e4a3d4ea42bc1d44e31e7cf60b2fac84c5b61bc7d3"
+    },
+    {
+      "path": "launchmind_blog/static/description/images/main_screenshot.png",
+      "sha256": "78ccfeaffd6e0c5bc01cd1a42b5d5a8fddcaae8854e811dc9c1311f2f91c9e24"
+    },
+    {
+      "path": "launchmind_blog/static/description/images/screenshot_2.png",
+      "sha256": "7ec0a0260aabf484dc8c0dc60e5acea59ef4ab82a3b9ab02daa1bf834ea5cf88"
+    },
+    {
+      "path": "launchmind_blog/static/description/images/screenshot_3.png",
+      "sha256": "9b249795d0d7556ab8ea31a19a7231bab6f39eecd81fa2df7f250e813358a172"
+    },
+    {
+      "path": "launchmind_blog/static/description/index.html",
+      "sha256": "3d08e9cb0a014021029442463e489e444207ede75d141f2bdf62cd1c2440389c"
+    },
+    {
+      "path": "launchmind_blog/utils/__init__.py",
+      "sha256": "83a79f56cc48474c2a8ede0d1f071b2ff36ac118b094569f0c7c76bc4b33933b"
+    },
+    {
+      "path": "launchmind_blog/utils/destination.py",
+      "sha256": "d71edbd95fd5ecb87ca5ada0518d8dad6fc383a10b92d02ba717c9176ecad293"
+    },
+    {
+      "path": "launchmind_blog/utils/enrollment.py",
+      "sha256": "a78e54bd58d61e3e845d65c25f85e96da5bca461c7e6ed9a25b3365e80061aca"
+    },
+    {
+      "path": "launchmind_blog/utils/html_sanitize.py",
+      "sha256": "d41d89e50bf2532dccf17158229fcb3b84554b43b343d7281435474d0e87b401"
+    },
+    {
+      "path": "launchmind_blog/utils/media.py",
+      "sha256": "a31c1d767d4eb53b7429ffc69127294195a88e0481bf2b4f2f3b90a41a525229"
+    },
+    {
+      "path": "launchmind_blog/utils/outbound.py",
+      "sha256": "504a29fb5e32ca0970f9f2ab1a42e4fe7a5f34be6a323f24d8d77749bfd7cd14"
+    },
+    {
+      "path": "launchmind_blog/utils/signing.py",
+      "sha256": "f30f85695b9073536a0dde299e2e10cac53606ead4dffc105e3056b132144c23"
+    },
+    {
+      "path": "launchmind_blog/utils/site_policy.py",
+      "sha256": "4e4a567d77a34a4d18ee2987cf55f442a9868695498d46bdbd570511e51d24b0"
+    },
+    {
+      "path": "launchmind_blog/utils/telemetry.py",
+      "sha256": "9f32e0c25ee6ea1663c29c5e525a9a38cf2feb0be57b5fbee6c04861fdc3941a"
+    },
+    {
+      "path": "launchmind_blog/utils/webhook_values.py",
+      "sha256": "62ad4d3cccffc0ad9d9c39725bd1eab90da9b3c0a98eb671086f41f0b310341e"
+    },
+    {
+      "path": "launchmind_blog/views/media_cover.xml",
+      "sha256": "0df1570b62aa8bab3948acc956880ed170f0607c540351bccbd1b1fdc28ccf2c"
+    },
+    {
+      "path": "launchmind_blog/views/res_config_settings_views.xml",
+      "sha256": "06c3c472323991418ca27a7d9ccb4d1b4d921889d61a3f29e3261a2dcf46e543"
+    }
+  ]
+}

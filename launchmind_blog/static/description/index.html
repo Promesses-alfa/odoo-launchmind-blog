@@ -2,7 +2,7 @@
   <div class="oe_row oe_spaced">
     <div class="oe_span12">
       <h2 class="oe_slogan">Launchmind Blog for Odoo</h2>
-      <h3 class="oe_slogan">AI-generated, GEO-optimized blog articles &mdash; published automatically to your Odoo Website</h3>
+      <h3 class="oe_slogan">AI-generated, GEO-optimized blog articles for your native Odoo Website</h3>
     </div>
     <div class="oe_span12">
       <p class="oe_mt32" style="text-align: center;">
@@ -20,10 +20,10 @@
       <h2 class="oe_slogan">Stop writing blog posts. Start ranking on Google AND ChatGPT.</h2>
       <p class="oe_mt32" style="text-align: justify;">
         Launchmind generates SEO + GEO optimized articles for your business and pushes them
-        directly into your Odoo Website &gt; Blog. New posts arrive within one minute of being
-        published &mdash; no copy-paste, no scheduling, no extra dashboards. Articles appear as
-        native <code>blog.post</code> records that you can still edit, unpublish, or restyle
-        from the Odoo backend like any other post.
+        directly into your selected Odoo Website &gt; Blog after connection confirmation.
+        Articles are native <code>blog.post</code> records. Sync replaces managed fields;
+        source withdrawal controls publication. Reconciliation can restore locally deleted,
+        archived or drafted posts while their source remains eligible.
       </p>
     </div>
   </div>
@@ -47,28 +47,29 @@
     </div>
 
     <div class="oe_span4">
-      <h3 class="oe_slogan">One-click connect</h3>
+      <h3 class="oe_slogan">Explicit destination</h3>
       <p style="text-align: justify;">
-        Paste your Launchmind API key in Settings &gt; Website, click <strong>Connect</strong>,
-        and you're done. Your Odoo registers itself with Launchmind and articles start
-        flowing into your blog automatically.
+        Select an existing website/blog pair in Settings &gt; Website, enter your API key
+        server-side, and click <strong>Connect</strong>. Signed installation confirmation
+        must complete before delivery. The destination locks once owned posts exist.
       </p>
     </div>
 
     <div class="oe_span4">
-      <h3 class="oe_slogan">Real-time push</h3>
+      <h3 class="oe_slogan">Retryable delivery</h3>
       <p style="text-align: justify;">
-        No cron job, no manual sync. Launchmind pushes each new article to your Odoo via
-        webhook the moment it's ready &mdash; usually within one minute of generation.
+        Launchmind delivers through a signed webhook with retained retry state.
+        Odoo scheduled work handles optional discovery, notifications and daily health.
+        Delivery failures never switch back to weaker authentication.
       </p>
     </div>
 
     <div class="oe_span4">
       <h3 class="oe_slogan">Native blog posts</h3>
       <p style="text-align: justify;">
-        Articles arrive as standard <code>blog.post</code> records, fully editable in Odoo.
-        Cover images, tags, author and meta descriptions all preserved &mdash; nothing is
-        locked behind a custom UI.
+        Articles arrive as standard <code>blog.post</code> records. Delivered media can be
+        stored locally, authors use connector-owned identities, and native tags reuse
+        exact labels without renaming shared customer tags.
       </p>
     </div>
   </div>
@@ -84,11 +85,10 @@
     </div>
 
     <div class="oe_span4">
-      <h3 class="oe_slogan">8 languages</h3>
+      <h3 class="oe_slogan">Dutch-first pilot</h3>
       <p style="text-align: justify;">
-        English, Dutch, German, French, Spanish, Italian, Polish and Hindi are all supported
-        out of the box. Choose your language in your Launchmind dashboard &mdash; the module
-        respects whatever you set there.
+        The first pilot is Dutch. Additional languages and customer routing need
+        representative native validation before a multilingual rollout is claimed.
       </p>
     </div>
 
@@ -97,7 +97,8 @@
       <p style="text-align: justify;">
         Built on top of Odoo's native <code>website_blog</code> module, so canonical URLs,
         sitemap.xml, breadcrumbs and Open Graph tags all keep working exactly as Odoo
-        designed them.
+        designed them. Article JSON-LD is added only when no Article/BlogPosting owner
+        already exists. Customer robots and noindex policy remain authoritative.
       </p>
     </div>
   </div>
@@ -113,7 +114,8 @@
       <h3 class="oe_slogan">1. Install the module</h3>
       <p style="text-align: justify;">
         Install <strong>Launchmind Blog</strong> from the Odoo Apps store. It depends only
-        on the standard <code>website_blog</code> module &mdash; no extra dependencies.
+        on the standard <code>website_blog</code> module. Hosting must allow custom Python
+        addons; standard Odoo Online without custom addons is not supported.
       </p>
     </div>
 
@@ -122,24 +124,24 @@
       <p style="text-align: justify;">
         Go to <em>Settings &gt; Website &gt; Launchmind Blog</em>, paste your API key (find
         it at launchmind.io &gt; Dashboard &gt; Settings &gt; API), and click
-        <strong>Connect</strong>.
+        <strong>Connect</strong> after selecting the website and blog.
       </p>
     </div>
 
     <div class="oe_span6">
-      <h3 class="oe_slogan">3. Articles start flowing</h3>
+      <h3 class="oe_slogan">3. Confirm and verify</h3>
       <p style="text-align: justify;">
-        Launchmind immediately starts pushing your most recent articles to your Odoo blog.
-        From now on, every new article you generate at launchmind.io will appear in your
-        Odoo blog within one minute of publication.
+        Wait for signed confirmation, inspect diagnostics, and verify an approved staging
+        article. Customer publication, canary and backlog activation need separate approval.
       </p>
     </div>
 
     <div class="oe_span6">
-      <h3 class="oe_slogan">4. Edit, restyle, publish</h3>
+      <h3 class="oe_slogan">4. Configure optional features</h3>
       <p style="text-align: justify;">
-        Articles are native Odoo blog posts. Edit them with the Website Builder, change
-        the cover, tweak the SEO &mdash; all the standard Odoo blog tools work normally.
+        Telemetry is opt-in and needs customer approval. It includes full referrer and
+        clicked-target URLs, origin-observed crawler data and daily health.
+        IndexNow stays disabled until production-domain proof and separate activation approval.
       </p>
     </div>
   </div>

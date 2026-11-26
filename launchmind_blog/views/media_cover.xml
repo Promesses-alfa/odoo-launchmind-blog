@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="record_cover_alt" inherit_id="website.record_cover">
+        <xpath expr="//div[contains(@t-attf-class, 'o_record_cover_image')]" position="attributes">
+            <attribute name="t-att-role">'img' if _cp.get('alt') else None</attribute>
+            <attribute name="t-att-aria-label">_cp.get('alt') or None</attribute>
+        </xpath>
+    </template>
+</odoo>

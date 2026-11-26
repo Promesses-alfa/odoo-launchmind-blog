@@ -25,6 +25,59 @@
                                 <label for="launchmind_api_base" class="col-lg-3 o_light_label"/>
                                 <field name="launchmind_api_base"/>
                             </div>
+                            <div class="row mt8">
+                                <label for="launchmind_website_id" class="col-lg-3 o_light_label"/>
+                                <field name="launchmind_website_id"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="launchmind_blog_id" class="col-lg-3 o_light_label"/>
+                                <field name="launchmind_blog_id"
+                                       domain="['|', ('website_id', '=', False), ('website_id', '=', launchmind_website_id)]"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="launchmind_production_origin" class="col-lg-3 o_light_label"/>
+                                <field name="launchmind_production_origin" placeholder="https://www.example.com"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="launchmind_telemetry_enabled" class="col-lg-3 o_light_label"/>
+                                <field name="launchmind_telemetry_enabled"/>
+                            </div>
+                            <div class="row">
+                                <label for="launchmind_discovery_enabled" class="col-lg-3 o_light_label"/>
+                                <field name="launchmind_discovery_enabled"/>
+                            </div>
+                            <div class="row">
+                                <label for="launchmind_indexnow_enabled" class="col-lg-3 o_light_label"/>
+                                <field name="launchmind_indexnow_enabled"/>
+                            </div>
+                            <div class="row mt8 text-muted small">
+                                <div class="col-lg-12">
+                                    Last accepted health report:
+                                    <field name="launchmind_health_accepted_at" nolabel="1" readonly="1" class="oe_inline"/>
+                                    <br/>
+                                    Last delivery received:
+                                    <field name="launchmind_last_delivery_at" nolabel="1" readonly="1" class="oe_inline"/>
+                                    <br/>
+                                    IndexNow queue: pending
+                                    <field name="launchmind_queue_pending" nolabel="1" readonly="1" class="oe_inline"/>,
+                                    retrying
+                                    <field name="launchmind_queue_retrying" nolabel="1" readonly="1" class="oe_inline"/>,
+                                    held
+                                    <field name="launchmind_queue_held" nolabel="1" readonly="1" class="oe_inline"/>,
+                                    blocked
+                                    <field name="launchmind_queue_blocked" nolabel="1" readonly="1" class="oe_inline"/>
+                                    <button name="action_launchmind_retry_blocked"
+                                            string="Retry blocked"
+                                            type="object"
+                                            class="btn-link"
+                                            invisible="not launchmind_queue_blocked"/>
+                                </div>
+                            </div>
+                            <div class="row mt8" invisible="not launchmind_warnings">
+                                <div class="col-lg-12 text-warning">
+                                    <field name="launchmind_warnings" nolabel="1" readonly="1"/>
+                                </div>
+                            </div>
                             <div class="row mt16">
                                 <div class="col-lg-12">
                                     <field name="launchmind_connected" invisible="1"/>
@@ -52,7 +105,7 @@
                                     <i class="fa fa-info-circle"/>
                                     Don't have an account yet?
                                     <a href="https://launchmind.io" target="_blank">Sign up at launchmind.io</a>
-                                    — your API key is in
+                                    Your API key is in
                                     <em>Dashboard &gt; Settings &gt; API</em>.
                                 </div>
                             </div>
