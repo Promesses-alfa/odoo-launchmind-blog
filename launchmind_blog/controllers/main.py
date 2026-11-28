@@ -61,7 +61,12 @@ from ..utils.signing import (
 
 from ..utils.html_sanitize import excerpt_as_text, sanitize_article_html
 from ..utils.media import sync_media
-from ..utils.destination import DestinationNotConfigured, resolve_destination
+from ..utils.destination import (
+    DESTINATION_LANGUAGE_CAPABILITY,
+    DestinationNotConfigured,
+    destination_default_language,
+    resolve_destination,
+)
 from ..utils.webhook_values import (
     CheckRequest,
     UnpublishRequest,
@@ -70,6 +75,16 @@ from ..utils.webhook_values import (
 )
 
 _logger = logging.getLogger(__name__)
+
+
+def _parse_webhook(env: Any, payload: Any) -> WebhookRequest | UnpublishRequest | CheckRequest:
+    return WebhookRequest.parse(
+        payload,
+        env['res.lang']
+        .sudo()
+        .search_read([('active', '=', True)], ['code', 'iso_code', 'url_code']),
+        destination_default_language(env),
+    )
 
 
 def _json_response(payload, status=200):
@@ -130,13 +145,7 @@ class LaunchmindBlogWebhookController(http.Controller):
             return _json_response({'error': 'Invalid JSON body'}, status=400)
 
         try:
-            article = WebhookRequest.parse(
-                payload,
-                request.env['res.lang']
-                .sudo()
-                .search_read([('active', '=', True)], ['code', 'iso_code', 'url_code']),
-                request.env['website'].get_current_website().default_lang_id.code,
-            )
+            article = _parse_webhook(request.env, payload)
         except ValueError as exc:
             return _json_response({'error': str(exc)}, status=400)
 
@@ -224,13 +233,7 @@ def _signed_webhook(env: Any, httprequest: Any) -> Response:
     if isinstance(payload, dict) and 'api_key' in payload:
         return _json_response({'error': 'api_key_not_allowed'}, status=400)
     try:
-        article = WebhookRequest.parse(
-            payload,
-            env['res.lang']
-            .sudo()
-            .search_read([('active', '=', True)], ['code', 'iso_code', 'url_code']),
-            env['website'].get_current_website().default_lang_id.code,
-        )
+        article = _parse_webhook(env, payload)
     except ValueError as exc:
         return _json_response({'error': str(exc)}, status=400)
     try:
@@ -305,7 +308,11 @@ def apply_webhook(
             post = _owned_post(env, article_id)
             if not post or not post.active or not post.is_published:
                 stale.append(article_id)
-        return {'success': True, 'stale': stale}
+        return {
+            'success': True,
+            'stale': stale,
+            'capabilities': [DESTINATION_LANGUAGE_CAPABILITY],
+        }
     existing = _owned_post(env, article.article_id)
     if isinstance(article, UnpublishRequest):
         if existing:
@@ -396,6 +403,7 @@ def apply_webhook(
         'post_id': post.id,
         'post_url': urljoin(base_url.rstrip('/') + '/', post.website_url),
         'article_id': article.article_id,
+        'capabilities': [DESTINATION_LANGUAGE_CAPABILITY],
     }
     if media_deferred:
         result['media_deferred'] = True

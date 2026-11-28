@@ -1,7 +1,7 @@
 {
   "format": 1,
   "source_repository": "Promesses-alfa/Launchmind.io",
-  "source_sha": "8a95da729b71c9942524d61706d8eddfd87e13ce",
+  "source_sha": "87e04ca1cbad884f432e470568f0b6d8b62fc2bf",
   "files": [
     {
       "path": "docs/design/odoo-discovery-measurement.md",
@@ -17,11 +17,11 @@
     },
     {
       "path": "docs/design/pebble-odoo-parity-gaps.md",
-      "sha256": "c777e92108b174a6a6009d2dedd0c1cbb3437eff10986c12ebf24c36691f6c02"
+      "sha256": "2f84bf737c6b18a351a82c2ec7ac89106f239b47e558e93d5c49c9f46b02e108"
     },
     {
       "path": "docs/evidence/pebble-decisions.tsv",
-      "sha256": "61d8842ac2e79029eb1b75bdb6f806cb94f854ca362178917219badac2d88d94"
+      "sha256": "c829960e59a443536bfb59e97f01c353b1d2317e28c024e323d1311ca00cc6f4"
     },
     {
       "path": "docs/plans/pebble-odoo-pilot.md",
@@ -57,7 +57,7 @@
     },
     {
       "path": "launchmind_blog/controllers/main.py",
-      "sha256": "094bb7149d0983065de1fd7967d5c9545a08fc7dd92f6c06d5cd9f1a99d41c81"
+      "sha256": "6eba2cf49f971ae4f4b70daceae039c48e833deeb5e099f824ade3bf110bb78e"
     },
     {
       "path": "launchmind_blog/controllers/robots.py",
@@ -85,7 +85,7 @@
     },
     {
       "path": "launchmind_blog/models/discovery.py",
-      "sha256": "d73d91ecacfeba5afdad07dae8305b63c43f92cbc048c3123f7e887300a6e9eb"
+      "sha256": "af0de01519a4d0e2bfe08b01231c8a54ba1bd6e0bc48fd3110fb2efa9a11225b"
     },
     {
       "path": "launchmind_blog/models/ir_attachment.py",
@@ -101,7 +101,7 @@
     },
     {
       "path": "launchmind_blog/models/res_config_settings.py",
-      "sha256": "f259ea80ea52a1219442da54e570fc2077bb28a67dcb0f5fd97d312dbbc035b1"
+      "sha256": "db12537253dc5c706cb5bd31c0f150a10bc78f46ffcaa4abac95fff0fe64a799"
     },
     {
       "path": "launchmind_blog/models/res_config_settings_discovery.py",
@@ -141,7 +141,7 @@
     },
     {
       "path": "launchmind_blog/utils/destination.py",
-      "sha256": "d71edbd95fd5ecb87ca5ada0518d8dad6fc383a10b92d02ba717c9176ecad293"
+      "sha256": "36a37b93381ed99f5bceb0035791988e600825305e0caec65bd8d6cd90f8be71"
     },
     {
       "path": "launchmind_blog/utils/enrollment.py",
@@ -173,7 +173,7 @@
     },
     {
       "path": "launchmind_blog/utils/webhook_values.py",
-      "sha256": "62ad4d3cccffc0ad9d9c39725bd1eab90da9b3c0a98eb671086f41f0b310341e"
+      "sha256": "9ec275bf6b29768822c6f8a0eebf38108646af8d9e0c29d193d8e59390c13b04"
     },
     {
       "path": "launchmind_blog/views/media_cover.xml",

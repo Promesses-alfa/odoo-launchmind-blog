@@ -131,7 +131,10 @@ Receiver rules:
   `copy=False`). Lookup by that field first; else the legacy `lm:<id>`
   keyword marker in the Launchmind blog, and then backfill the field.
 - Translatable fields are written in the active Odoo language matching
-  `language` (e.g. `nl` to `nl_NL`); if none is active, the default context.
+  `language`, preferring an exact regional match, then the configured
+  destination website's default language (falling back to the current website
+  when unconfigured), then canonical home-region codes (e.g. `en_US`,
+  `nl_NL`); if none is active, the default context.
 - `post_date` from `published_at`; `subtitle` from `excerpt` (fallback
   `meta_description`); `website_meta_title` from `seo_title` (fallback
   title); `website_meta_description` from `meta_description`;
@@ -140,7 +143,12 @@ Receiver rules:
 - A cover URL is used only when it is an absolute http(s) URL without
   quotes, parentheses, backslashes or whitespace.
 - Success response: `{"success": true, "action", "post_id", "post_url",
-  "article_id"}` where `post_url` is the absolute `website_url` Odoo computes.
+  "article_id", "capabilities": ["destination_default_language"]}` where
+  `post_url` is the absolute `website_url` Odoo computes and `capabilities` is
+  an additive receiver-capability list also echoed by `articles.check`. The
+  platform records the destination-language composition key only after the
+  receiver confirms `destination_default_language`, and `articles.check`
+  triggers one-time replay for prior rows when an older addon upgrades.
 - Blog selection, author mapping, media download and unpublish are unchanged
   in this slice (slices 2-4).
 
@@ -165,10 +173,11 @@ language, `hide_tags`, `hide_powered_by` and the lead-capture options),
 
 Per subscription and run, from the shared visible-article rule (archived stays
 eligible) and the ledger, in this priority within the existing budgets:
-1. Withdraw: a row with an `odoo_post_id` and status `success` or `failed`
-   whose article is no longer eligible (unpublished, hidden, missing its
-   localized title or content, or deleted on the platform) gets
-   `article.unpublished`. Success sets `withdrawn`.
+1. Withdraw: a row with status `success` or `failed` (with or without
+   `odoo_post_id`, covering a lost ACK on first publish) whose article is no
+   longer eligible (unpublished, hidden, missing its localized title or
+   content, or deleted on the platform) gets `article.unpublished`. Success
+   sets `withdrawn` and backfills `odoo_post_id` when Odoo returns one.
 2. Publish: an eligible article without a delivered row, or with status
    `withdrawn` or `failed`, gets `article.published`.
 3. Update: an eligible `success` row whose article `updated_at` is newer than
@@ -238,15 +247,16 @@ Platform, per `article.published`:
   `test/image_sniff_cases.json` is the one set of byte samples both test
   suites must classify identically. SVG and anything else is rejected. The
   request carries at most 15 MiB of decoded image bytes; images that would
-  exceed it stay remote and are pending.
+  exceed it stay remote and are not pending (same deterministic cap rule as
+  the 10-image and 5 MiB per-image caps).
 - A permanent image failure (unsafe or non-https URL, too large, not an
-  accepted image type, 4xx) leaves the image remote and is not pending. A
-  transient failure (timeout, network error, 5xx, 429) leaves it remote and
-  sets `media_pending`. HTTP error status decides even when its body exceeds
-  the cap. Empty, malformed, private or mixed DNS answers are permanent and
-  never fetched; resolver exceptions (including EAI_AGAIN) are transient for
-  Odoo media, including redirect targets. Other guarded-fetch callers retain
-  their existing DNS diagnostics.
+  accepted image type, 4xx other than 408/429) leaves the image remote and is
+  not pending. A transient failure (timeout, network error, 5xx, 429, 408)
+  leaves it remote and sets `media_pending`. HTTP error status decides even
+  when its body exceeds the cap. Empty, malformed, private or mixed DNS
+  answers are permanent and never fetched; resolver exceptions (including
+  EAI_AGAIN) are transient for Odoo media, including redirect targets. Other
+  guarded-fetch callers retain their existing DNS diagnostics.
 - A delivered publish with `media_pending` true keeps `push_status
   'success'` and is re-sent by the update rule under the slice 2 backoff
   (`attempt_count`, `next_attempt_at`); a publish with no pending media
@@ -260,7 +270,9 @@ Platform, per `article.published`:
   sets `media_pending` like the text-only fallback.
 - Successful delivery has a required internal `mediaPending` boolean.
   The ledger consumes it once after combining downloaded and receiver-pending
-  media. Decoded-byte overflow stays pending across repeated successful updates.
+  media. Decoded-byte overflow is a deterministic cap and does not set
+  `media_pending`; transient image failures, run cutoffs, proxy 413 fallbacks
+  and receiver `media_deferred` remain retryable.
 - Each two-item batch settles all started items and persists its ledger rows
   before the next batch starts. A thrown media/push/withdraw operation becomes
   a failed row with backoff and retains prior post identity. A failed upsert
@@ -333,9 +345,14 @@ Platform rules:
   slice 1 meaning.
 - `tags` keeps its slice 1 meaning: the visible tag set, `[]` when the
   subscription hides tags.
-- The composition key includes a payload version (2 for this slice), so
-  every delivered article is re-sent once and existing posts get native
-  authors and tags (a data fix for existing rows, not only for new ones).
+- The composition policy includes a payload version (`2` for slice 4; bumped
+  to `3` for the HTTP 408 media retry fix) plus a receiver-capability receipt
+  key (`destination_default_language`): pre-v3 rows replay once immediately
+  and record the base key against older addons or the destination-language
+  key once the receiver advertises `destination_default_language`, while
+  `articles.check` marks pre-upgrade base-key rows stale once an addon
+  upgrades so they replay once without waiting for an unrelated source edit
+  or looping against older addons.
 - A receiver reply `409` with `"error": "destination_not_configured"` is a
   failure under the slice 2 backoff; its message is the diagnostic.
 

@@ -21,7 +21,7 @@ def resolve_language_code(
     active_languages: Sequence[Mapping[str, str]],
     default_language: str | None = None,
 ) -> str | None:
-    """Return an active res.lang code, preferring exact and home-region codes.
+    """Return an active res.lang code: exact, website default, then canonical/home-region codes.
 
     Odoo 18 exposes code, iso_code and url_code on res.lang. Only the
     canonical code is suitable for the ORM's lang context.

@@ -22,7 +22,12 @@ from odoo import _, api, fields, models, release, tools
 from odoo.exceptions import UserError
 
 from ..utils.webhook_values import language_base
-from ..utils.destination import validate_destination, parameter_id, DESTINATION_MESSAGE
+from ..utils.destination import (
+    DESTINATION_MESSAGE,
+    destination_default_language,
+    parameter_id,
+    validate_destination,
+)
 from ..utils.enrollment import (
     PARAM_API_KEY,
     PARAM_CONNECTED,
@@ -139,10 +144,9 @@ class ResConfigSettings(models.TransientModel):
     # ------------------------------------------------------------------
 
     def _launchmind_publication_language(self):
-        # The blog's language is the website default, not the connecting
-        # admin's interface language.
-        website = self.env['website'].get_current_website()
-        return language_base(website.default_lang_id.code)
+        # The blog's language is the destination website's default (falling back
+        # to the current website), not the connecting admin's interface language.
+        return language_base(destination_default_language(self.env, self.launchmind_website_id))
 
     def _launchmind_loopback_allowed(self):
         # Only an explicit server option, set by a controlled local test,

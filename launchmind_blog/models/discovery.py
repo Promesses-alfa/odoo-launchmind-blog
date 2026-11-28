@@ -21,7 +21,7 @@ from urllib.parse import urlsplit
 from odoo import api, fields, models, modules, release
 
 from ..utils import outbound
-from ..utils.destination import find_destination, parameter_id
+from ..utils.destination import destination_default_language, find_destination, parameter_id
 from ..utils.enrollment import (
     PARAM_API_KEY,
     PARAM_CONNECTED,
@@ -230,26 +230,24 @@ class LaunchmindBlogUrl(models.Model):
         )
 
     @api.model
-    def _native_url(self, post, website, origin: str) -> str:
-        lang = website.default_lang_id.code
-        return origin + post.with_context(lang=lang).website_url
+    def _native_url(self, localized_post, origin: str) -> str:
+        return origin + localized_post.website_url
 
     @api.model
-    def _post_fingerprint(self, post, website, url: str) -> str:
-        post = post.with_context(lang=website.default_lang_id.code)
+    def _post_fingerprint(self, localized_post, url: str) -> str:
         return site_policy.fingerprint(
             {
                 'url': url,
-                'name': post.name,
-                'subtitle': post.subtitle,
-                'content': post.content,
-                'meta_title': post.website_meta_title,
-                'meta_description': post.website_meta_description,
-                'meta_keywords': post.website_meta_keywords,
-                'post_date': post.post_date,
-                'cover': post.cover_properties,
-                'author': post.author_name,
-                'tags': sorted(post.tag_ids.mapped('name')),
+                'name': localized_post.name,
+                'subtitle': localized_post.subtitle,
+                'content': localized_post.content,
+                'meta_title': localized_post.website_meta_title,
+                'meta_description': localized_post.website_meta_description,
+                'meta_keywords': localized_post.website_meta_keywords,
+                'post_date': localized_post.post_date,
+                'cover': localized_post.cover_properties,
+                'author': localized_post.author_name,
+                'tags': sorted(localized_post.tag_ids.mapped('name')),
             }
         )
 
@@ -316,11 +314,13 @@ class LaunchmindBlogUrl(models.Model):
             return hold
         self.env['ir.config_parameter'].sudo().set_param(PARAM_DISCOVERY_HOLD, False)
         website, blog = self._destination()
+        lang = destination_default_language(self.env, website)
         origin = config.origin
         rows = self.sudo()
         now = _now()
         for post in self._owned_posts(blog).filtered(self._natively_public):
-            url = self._native_url(post, website, origin)
+            localized = post.with_context(lang=lang)
+            url = self._native_url(localized, origin)
             row = rows.search(
                 [('source_uuid', '=', post.launchmind_article_id), ('url', '=', url)], limit=1
             )
@@ -335,7 +335,7 @@ class LaunchmindBlogUrl(models.Model):
                 )
             elif row.post_id != post:
                 row.post_id = post
-            self._verify(row, post, website, robots)
+            self._verify(row, localized, robots)
         # Reconcile evidence independently of the post batch. Absence from a
         # bounded scan is NOT evidence of withdrawal. Inspect native identity
         # and URL, including deleted, moved, archived or drafted posts.
@@ -346,7 +346,7 @@ class LaunchmindBlogUrl(models.Model):
                 and post.blog_id == blog
                 and post.launchmind_article_id == row.source_uuid
                 and self._natively_public(post)
-                and self._native_url(post, website, origin) == row.url
+                and self._native_url(post.with_context(lang=lang), origin) == row.url
             ):
                 continue
             values: dict[str, object] = {'eligible': False}
@@ -364,7 +364,7 @@ class LaunchmindBlogUrl(models.Model):
         return 'refreshed'
 
     @api.model
-    def _verify(self, row, post, website, robots) -> None:
+    def _verify(self, row, localized_post, robots) -> None:
         now = _now()
         try:
             reply = self._fetch(row.url, site_policy.MAX_PAGE_BYTES)
@@ -389,12 +389,12 @@ class LaunchmindBlogUrl(models.Model):
                 }
             )
             return
-        digest = self._post_fingerprint(post, website, row.url)
+        digest = self._post_fingerprint(localized_post, row.url)
         values = {
             'eligible': True,
             'ever_eligible': True,
             'fingerprint': digest,
-            'title': post.with_context(lang=website.default_lang_id.code).name,
+            'title': localized_post.name,
             'checked_at': now,
         }
         current_intent = row.desired == 'update' and row.desired_fingerprint == digest
@@ -706,18 +706,16 @@ class LaunchmindBlogUrl(models.Model):
         website, blog = self._destination()
         if not blog:
             return []
+        lang = destination_default_language(self.env, website)
         rows = self.sudo().search([('eligible', '=', True), ('origin', '=', config.origin)])
         entries = []
         for row in rows:
             post = row.post_id
             # Re-check native state at serve time; a draft never stays listed.
-            if (
-                post
-                and post.blog_id == blog
-                and self._natively_public(post)
-                and self._native_url(post, website, config.origin) == row.url
-            ):
-                entries.append((post.post_date, row.title or post.name, row.url))
+            if post and post.blog_id == blog and self._natively_public(post):
+                localized = post.with_context(lang=lang)
+                if self._native_url(localized, config.origin) == row.url:
+                    entries.append((post.post_date, row.title or localized.name, row.url))
         entries.sort(key=lambda entry: entry[0], reverse=True)
         return [(title, url) for _date, title, url in entries[: site_policy.LLMS_LIMIT]]
 

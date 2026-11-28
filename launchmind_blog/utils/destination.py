@@ -10,6 +10,7 @@ class DestinationNotConfigured(ValueError):
 DESTINATION_MESSAGE = (
     'Select a website and a matching blog under Settings > Website > Launchmind Blog.'
 )
+DESTINATION_LANGUAGE_CAPABILITY = 'destination_default_language'
 
 
 def validate_destination(website_id: int, blog_id: int, blog_website_id: int) -> bool:
@@ -48,6 +49,19 @@ def resolve_destination(env: Any) -> Any:
     if destination is None:
         raise DestinationNotConfigured(DESTINATION_MESSAGE)
     return destination[1]
+
+
+def destination_default_language(env: Any, selected_website: Any = None) -> str | None:
+    """Return the default res.lang code of the destination website, falling back to current."""
+    website = selected_website
+    if not website:
+        destination = find_destination(env)
+        website = (
+            destination[0] if destination is not None else env['website'].get_current_website()
+        )
+    if not website or not website.default_lang_id:
+        return None
+    return website.default_lang_id.code or None
 
 
 def migration_destination(
